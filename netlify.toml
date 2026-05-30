@@ -5,6 +5,15 @@
 [functions]
   directory = "dist/server"
 
+# قاعدة خاصة للـ Assets: (الصور، الـ CSS، والـ JS)
+# هذه القاعدة تخبر Netlify: إذا وجدتِ ملفاً في مجلد الـ assets، قدميه مباشرة
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 200
+  force = true
+
+# قاعدة لباقي الطلبات (SSR)
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/server"
