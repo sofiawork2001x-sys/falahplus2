@@ -1,8 +1,17 @@
 {
-  "rewrites": [
+  "functions": {
+    "dist/server/server.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/server/index.js"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "dist/server/server.js"
     }
   ]
 }
