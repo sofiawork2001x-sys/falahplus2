@@ -1,0 +1,9 @@
+√[build]
+  command = "npm run build"
+  publish = ".output/public"
+
+[[redirects]]
+  from = "/*"
+  to = "/api/index"
+  status = 200
+  force = true
