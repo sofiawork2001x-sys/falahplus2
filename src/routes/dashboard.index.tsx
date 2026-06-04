@@ -22,7 +22,7 @@ function DashboardHome() {
     <div className="space-y-6">
       <div className="rounded-2xl border bg-card p-6 shadow-sm">
         <h1 className="text-2xl font-black">مرحباً، {user.profile?.full_name || user.email}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">دورك في المنصة: <span className="font-bold text-primary">{ROLE_LABEL[role]}</span></p>
+        <p className="mt-2 text-sm text-muted-foreground">لمنصة: <span className="font-bold text-primary">{ROLE_LABEL[role]}</span></p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {cards.filter(c => c.show).map((c) => (
