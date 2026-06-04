@@ -16,7 +16,7 @@ BEGIN
     crypt('Admin@Agro2026!', gen_salt('bf')),
     now(),
     '{"provider":"email","providers":["email"]}'::jsonb,
-    '{"full_name":"Admin AgroVault","role":"admin"}'::jsonb,
+    '{"full_name":"Admin  فلاح plus","role":"admin"}'::jsonb,
     now(), now(), '', '', '', ''
   );
 
@@ -26,7 +26,7 @@ BEGIN
     'email', new_uid::text, now(), now(), now());
 
   INSERT INTO public.profiles (id, full_name, phone, wilaya)
-  VALUES (new_uid, 'Admin AgroVault', NULL, NULL)
+  VALUES (new_uid, 'Admin  فلاح plus', NULL, NULL)
   ON CONFLICT (id) DO NOTHING;
 
   DELETE FROM public.user_roles WHERE user_id = new_uid;

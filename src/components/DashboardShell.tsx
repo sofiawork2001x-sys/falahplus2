@@ -70,7 +70,7 @@ function SidebarContent({ items, path, user, role, onLogout }: { items: Item[]; 
     <>
       <div className="flex items-center justify-between border-b px-5 py-4">
         <Link to="/" className="flex items-center gap-2 font-black text-primary text-lg">
-          <Leaf className="h-6 w-6" /> AgroVault
+          <Leaf className="h-6 w-6" />  فلاح plus
         </Link>
         <button onClick={onLogout} className="rounded-md p-1.5 text-muted-foreground hover:bg-accent" title="خروج"><LogOut className="h-4 w-4" /></button>
       </div>

@@ -38,7 +38,7 @@ function SignupPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4 py-10" dir="rtl">
       <div className="w-full max-w-2xl rounded-2xl border bg-card p-6 shadow-lg lg:p-10">
-        <Link to="/" className="flex items-center gap-2 font-black text-primary text-xl"><Leaf className="h-6 w-6"/> AgroVault</Link>
+        <Link to="/" className="flex items-center gap-2 font-black text-primary text-xl"><Leaf className="h-6 w-6"/>  فلاح plus</Link>
         <h1 className="mt-6 text-2xl font-black">إنشاء حساب جديد</h1>
         <p className="mt-1 text-sm text-muted-foreground">اختر دورك وأكمل بياناتك للبدء.</p>
 

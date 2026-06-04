@@ -27,7 +27,7 @@ function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4" dir="rtl">
       <div className="w-full max-w-md rounded-2xl border bg-card p-8 shadow-lg">
-        <Link to="/" className="flex items-center gap-2 font-black text-primary text-xl"><Leaf className="h-6 w-6"/> AgroVault</Link>
+        <Link to="/" className="flex items-center gap-2 font-black text-primary text-xl"><Leaf className="h-6 w-6"/>  فلاح plus</Link>
         <h1 className="mt-6 text-2xl font-black">تسجيل الدخول</h1>
         <form onSubmit={submit} className="mt-6 space-y-4">
           <div>

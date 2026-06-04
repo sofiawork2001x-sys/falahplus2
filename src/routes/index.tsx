@@ -17,7 +17,7 @@ function Home() {
       <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:px-8">
           <Link to="/" className="flex items-center gap-2 font-black text-primary text-xl">
-            <Leaf className="h-7 w-7" /> AgroVault
+            <Leaf className="h-7 w-7" />  فلاح plus
           </Link>
           <div className="flex items-center gap-2">
             <Link to="/login" className="rounded-xl border-2 border-primary px-5 py-2.5 text-base font-black text-primary hover:bg-primary/10">تسجيل الدخول</Link>
@@ -31,7 +31,7 @@ function Home() {
           <div className="max-w-3xl">
             <span className="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold backdrop-blur">منصة فلاحية جزائرية متكاملة</span>
             <h1 className="mt-4 text-3xl font-black leading-tight sm:text-4xl lg:text-5xl">
-              AgroVault: استشارة فلاحية فنية، تقنية، ومالية..
+               فلاح plus: استشارة فلاحية فنية، تقنية، ومالية..
               <br />حيث يلتقي الفلاح بالخبير، والآلة، والدعم.
             </h1>
             <p className="mt-5 max-w-2xl text-base/relaxed text-white/90 lg:text-lg/relaxed">
@@ -83,7 +83,7 @@ function Home() {
       </section>
 
       <footer className="border-t py-8 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} AgroVault — منصة الفلاح الجزائري.
+        © {new Date().getFullYear()}  فلاح plus — منصة الفلاح الجزائري.
       </footer>
     </div>
   );
