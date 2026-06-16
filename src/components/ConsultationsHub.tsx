@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/lib/auth";
 import { uploadMany } from "@/lib/storage";
 import { CONSULTATION_LABEL, type Consultation, type ConsultationReply, type ConsultationType } from "@/lib/types";
-import { Send, Upload, MessageSquare, Plus, CreditCard } from "lucide-react"; // 🆕 زدنا أيقونة الكارطة
+import { Send, Upload, MessageSquare, Plus } from "lucide-react";
 
 export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) {
   const user = useSession();
@@ -53,47 +53,26 @@ export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) 
 
   if (!user) return null;
 
-  // 🆕 دالة معالجة الدفع والإرسال
   const createConsult = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
-      // 1️⃣ أولاً نرفع الصور للـ Storage
       const imgs = files.length ? await uploadMany(user.id, files, "consultations") : [];
-      
-      /* 
-        2️⃣ هنا نربطو مع الـ Payment Gateway (مثال باستخدام Supabase Edge Functions أو Chargily API)
-        نرسلو معلومات الدفع ونستقبلو رابط الخلاص (Checkout URL)
-      */
-      const { data: paymentData, error: paymentError } = await supabase.functions.invoke("create-chargily-checkout", {
-        body: { 
-          amount: mode === "vet" ? 500 : 1000, // مثلاً البيطرية بـ 500 دج والفنية بـ 1000 دج
-          user_id: user.id,
-          user_email: user.email,
-          // نبعثو معلومات الاستشارة كـ Metadata باش كي يخلص السيستم يسجلها أوتوماتيكياً
-          metadata: { type, title, body, images: imgs } 
-        }
-      });
-
-      if (paymentError) throw paymentError;
-
-      if (paymentData?.checkout_url) {
-        // 3️⃣ ندو الفلاح ديريكت لصفحة الدفع الآمنة بالذهبية أو بريدي ميم
-        window.location.href = paymentData.checkout_url;
-      } else {
-        throw new Error("عذراً، فشل إنشاء رابط الدفع الإلكتروني.");
-      }
-
-    } catch (e: any) { 
-      alert(e.message); 
-    } finally { 
-      setBusy(false); 
-    }
+      const { data, error } = await supabase.from("consultations").insert({
+        farmer_id: user.id, type, title, body, images: imgs, wilaya_code: null,
+      }).select().single();
+      if (error) throw error;
+      setTitle(""); setBody(""); setFiles([]); setComposing(false);
+      await load();
+      if (data) setSelected((data as any).id);
+    } catch (e: any) { alert(e.message); }
+    finally { setBusy(false); }
   };
 
   const sendReply = async () => {
     if (!current || !reply.trim()) return;
     await supabase.from("consultation_replies").insert({ consultation_id: current.id, author_id: user.id, body: reply });
+    // Mark answered if expert replies
     if (role !== "farmer") await supabase.from("consultations").update({ status: "answered" }).eq("id", current.id);
     setReply("");
     await load();
@@ -103,7 +82,7 @@ export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) 
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-black">{mode === "vet" ? "الاستشارات البيطرية" : " فلاح plus"}</h1>
+          <h1 className="text-2xl font-black">{mode === "vet" ? "الاستشارات البيطرية" : "مركز الاستشارات"}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{mode === "vet" ? "استشارات صحة الحيوانات بين الفلاح والطبيب البيطري." : "استشارات فنية وتقنية ومالية بين الفلاح والخبراء."}</p>
         </div>
         {canCompose && (
@@ -114,7 +93,7 @@ export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) 
       </div>
 
       {composing && canCompose && (
-        <form onSubmit={createConsult} className="grid gap-3 rounded-2xl border bg-card p-5 shadow-sm">
+        <form onSubmit={createConsult} className="grid gap-3 rounded-2xl border bg-card p-5">
           {mode !== "vet" && (
             <select value={type} onChange={(e)=>setType(e.target.value as ConsultationType)} className="rounded-lg border bg-background px-3 py-2 text-sm">
               <option value="technical">{CONSULTATION_LABEL.technical}</option>
@@ -123,24 +102,11 @@ export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) 
           )}
           <input value={title} onChange={(e)=>setTitle(e.target.value)} placeholder="عنوان الاستشارة" required className="rounded-lg border bg-background px-3 py-2 text-sm"/>
           <textarea value={body} onChange={(e)=>setBody(e.target.value)} required rows={4} placeholder={mode==="vet"?"أعراض المرض، عمر الحيوان، التغذية...":"اشرح حالتك بالتفصيل"} className="rounded-lg border bg-background px-3 py-2 text-sm"/>
-          
           <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-dashed px-3 py-2.5 text-sm hover:bg-accent/30">
             <Upload className="h-4 w-4 text-primary"/> صور ({files.length})
             <input type="file" multiple accept="image/*" onChange={(e)=>setFiles(Array.from(e.target.files??[]))} className="hidden"/>
           </label>
-
-          {/* 🆕 بانر صغير يبين السعر للفلاح قبل ما يدفع */}
-          <div className="flex items-center justify-between rounded-xl bg-primary/5 border border-primary/10 p-3.5 text-xs text-primary font-bold">
-            <div className="flex items-center gap-2">
-              <CreditCard className="h-4 w-4" />
-              <span>مبلغ الاستشارة (دفع إلكتروني آمن):</span>
-            </div>
-            <span className="text-sm font-black">{mode === "vet" ? "500 دج" : "1000 دج"}</span>
-          </div>
-
-          <button disabled={busy} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-60 flex items-center justify-center gap-2">
-            {busy ? "جاري تحويلك للدفع الآمن…" : "الدفع والانتقال للتأكيد"}
-          </button>
+          <button disabled={busy} className="rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground disabled:opacity-60">{busy?"جارٍ الإرسال…":"إرسال الاستشارة"}</button>
         </form>
       )}
 
@@ -176,6 +142,7 @@ export default function ConsultationsHub({ mode }: { mode: "vet" | "non_vet" }) 
                 <p className="mt-1 text-xs text-muted-foreground">{CONSULTATION_LABEL[current.type]} · {new Date(current.created_at).toLocaleDateString("ar-DZ")}</p>
               </div>
               <div className="flex-1 space-y-4 overflow-y-auto bg-muted/20 p-5 lg:p-6">
+                {/* Original consultation as first bubble from the farmer */}
                 <ChatBubble
                   mine={current.farmer_id===user.id}
                   name={current.farmer_id===user.id ? "أنا (الفلاح)" : "الفلاح"}
