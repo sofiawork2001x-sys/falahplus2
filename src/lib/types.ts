@@ -72,6 +72,7 @@ export interface Consultation {
   wilaya_code: number | null;
   status: "open" | "answered" | "closed";
   created_at: string;
+  is_paid: boolean;
 }
 
 export interface ConsultationReply {
