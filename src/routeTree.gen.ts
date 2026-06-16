@@ -15,6 +15,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardVetRouteImport } from './routes/dashboard.vet'
+import { Route as DashboardPaymentRouteImport } from './routes/dashboard.payment'
 import { Route as DashboardMarketplaceRouteImport } from './routes/dashboard.marketplace'
 import { Route as DashboardListingsRouteImport } from './routes/dashboard.listings'
 import { Route as DashboardFinancialRouteImport } from './routes/dashboard.financial'
@@ -49,6 +50,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
 const DashboardVetRoute = DashboardVetRouteImport.update({
   id: '/vet',
   path: '/vet',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPaymentRoute = DashboardPaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardMarketplaceRoute = DashboardMarketplaceRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/financial': typeof DashboardFinancialRoute
   '/dashboard/listings': typeof DashboardListingsRoute
   '/dashboard/marketplace': typeof DashboardMarketplaceRoute
+  '/dashboard/payment': typeof DashboardPaymentRoute
   '/dashboard/vet': typeof DashboardVetRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/dashboard/financial': typeof DashboardFinancialRoute
   '/dashboard/listings': typeof DashboardListingsRoute
   '/dashboard/marketplace': typeof DashboardMarketplaceRoute
+  '/dashboard/payment': typeof DashboardPaymentRoute
   '/dashboard/vet': typeof DashboardVetRoute
   '/dashboard': typeof DashboardIndexRoute
 }
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/dashboard/financial': typeof DashboardFinancialRoute
   '/dashboard/listings': typeof DashboardListingsRoute
   '/dashboard/marketplace': typeof DashboardMarketplaceRoute
+  '/dashboard/payment': typeof DashboardPaymentRoute
   '/dashboard/vet': typeof DashboardVetRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/dashboard/financial'
     | '/dashboard/listings'
     | '/dashboard/marketplace'
+    | '/dashboard/payment'
     | '/dashboard/vet'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/dashboard/financial'
     | '/dashboard/listings'
     | '/dashboard/marketplace'
+    | '/dashboard/payment'
     | '/dashboard/vet'
     | '/dashboard'
   id:
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/dashboard/financial'
     | '/dashboard/listings'
     | '/dashboard/marketplace'
+    | '/dashboard/payment'
     | '/dashboard/vet'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
@@ -208,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardVetRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/payment': {
+      id: '/dashboard/payment'
+      path: '/payment'
+      fullPath: '/dashboard/payment'
+      preLoaderRoute: typeof DashboardPaymentRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/marketplace': {
       id: '/dashboard/marketplace'
       path: '/marketplace'
@@ -252,6 +271,7 @@ interface DashboardRouteChildren {
   DashboardFinancialRoute: typeof DashboardFinancialRoute
   DashboardListingsRoute: typeof DashboardListingsRoute
   DashboardMarketplaceRoute: typeof DashboardMarketplaceRoute
+  DashboardPaymentRoute: typeof DashboardPaymentRoute
   DashboardVetRoute: typeof DashboardVetRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
@@ -262,6 +282,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardFinancialRoute: DashboardFinancialRoute,
   DashboardListingsRoute: DashboardListingsRoute,
   DashboardMarketplaceRoute: DashboardMarketplaceRoute,
+  DashboardPaymentRoute: DashboardPaymentRoute,
   DashboardVetRoute: DashboardVetRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
